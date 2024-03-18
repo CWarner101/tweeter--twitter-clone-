@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %}Twit{% endblock title %}
+
+{% block content %}
+    <p>{{ object.author }} | {{ object.created }}</p>
+    <p>{{ object.body }}</p>
+    <p>
+        <a href="{% url "twit_edit" twit.pk %}">Edit</a> |
+        <a href="{% url "twit_delete" twit.pk %}">Delete</a>
+    </p>
+    <p> Back to <a href="{% url "twit_list" %}">Twits Home</a></p>
+{% endblock content %}

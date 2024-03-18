@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}Twits{% endblock title %}
+
+{% block content %}
+<h1>Tweeter Home</h1>
+<br>
+  {% for twit in twit_list %}
+  <p><a href="{% url "twit_detail" twit.pk %}">View Full Tweet</a></p>
+  <p>{{ twit.body }}</p>
+  <p>{{ twit.author }} | {{ twit.date }}</p>
+  <p>
+    <a href="{% url "twit_edit" twit.pk %}">Edit</a> |
+    <a href="{% url "twit_delete" twit.pk %}">Delete</a>
+  </p>
+  <hr>
+  {% endfor %}
+{% endblock content %}
