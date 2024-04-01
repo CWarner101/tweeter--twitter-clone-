@@ -22,5 +22,4 @@ class CustomUserChangeForm(UserChangeForm):
         fields = (
             "username",
             "email",
-            "date_of_birth",
             )

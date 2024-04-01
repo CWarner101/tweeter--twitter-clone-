@@ -10,5 +10,6 @@
         {{ form|crispy }}
         <button class="btn btn-success" type="submit">Login</button>
     </form>
-    <a href="{% url "password_reset" %}">Forgot your password?</a>
+    <p><a href="{% url "password_reset" %}">Forgot your password?</a></p>
+    <p><a href="{% url "signup" %}">Create a new account?</a></p>
 {% endblock content %}

@@ -28,8 +28,8 @@ class Twit(models.Model):
         return reverse("twit_detail", kwargs={"pk": self.pk})
     
 
-class Comments(models.Model):
-    """Comments on Twits"""
+class Comment(models.Model):
+    """Comments Model"""
 
     twit = models.ForeignKey(
         Twit,
@@ -43,6 +43,14 @@ class Comments(models.Model):
         related_name="comments"
     )
 
-    comment = models.CharField(max_length=150)
+    comment = models.CharField(max_length=140)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        """Comment as a string"""
+        return self.comment
+
+    def get_absolute_url(self):
+        """Comment absolute URL"""
+        return reverse("twit_list")
