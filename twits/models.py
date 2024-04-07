@@ -19,6 +19,9 @@ class Twit(models.Model):
         blank=True,
     )
 
+    class Meta:
+        ordering = ['-created']
+
     def __str__(self):
         """Twit as a string"""
         return self.body[:50]
