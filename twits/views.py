@@ -114,9 +114,6 @@ class TwitLikeView(LoginRequiredMixin, View):
         twit_id = request.GET.get("twit_id", None)
         twit_action = request.GET.get("twit_action", None)
 
-        print(twit_id)
-        print(twit_action)
-
         twit = Twit.objects.get(id=twit_id)
         if twit_action == "like":
             # Do like stuff

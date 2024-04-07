@@ -27,6 +27,10 @@ class Twit(models.Model):
         """Absolute URL for twit"""
         return reverse("twit_detail", kwargs={"pk": self.pk})
     
+    def get_like_url(self):
+        """Get like URL based on pk"""
+        return reverse("twit_like", kwargs={"pk": self.pk})
+    
 
 class Comment(models.Model):
     """Comments Model"""
