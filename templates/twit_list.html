@@ -9,7 +9,7 @@
     <p><a href="{% url "twit_detail" twit.pk %}">View Full Twit</a></p>
     <p>{{ twit.body }}</p>
     {% if twit.image_url != None %}
-      <p>{{ twit.image_url }}<p>
+      <img src="{{ twit.image_url }}" alt="{{ twit.image_url }}" style="width:300px;height:300px"></img>
     {% endif %}
     <p>{{ twit.author }} | {{ twit.created }}</p>
     {% if twit.author == user %}
@@ -18,6 +18,21 @@
         <a href="{% url "twit_delete" twit.pk %}">Delete</a>
       </p>
     {% endif %}
+    <p>
+      <a href="#">Comment</a> |
+      {% with user_likes=twit.likes.all %}
+      <button
+        data-id="{{ twit.id }}"
+        data-action="{% if user in user_likes %}un{% endif %}like"
+        data-like-url="{{ twit.get_like_url }}"
+        class="like_button btn btn-{% if user not in user_likes %}outline-{% endif %}primary"
+      >   
+        <i class="like_icon bi-hand-thumbs-up{% if user in user_likes %}-fill{% endif %}"></i>
+        <span class="like_count">{{ user_likes|length }}</span>
+        Likes
+      </button>
+      {% endwith %}
+    </p>
     {% for comment in twit.comments.all %}
       <p>
         {{ comment.author }} &middot;

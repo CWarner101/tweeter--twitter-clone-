@@ -29,6 +29,47 @@ class TwitDetailView(LoginRequiredMixin, View):
         """Doing POST request"""
         view = CommentPostView.as_view()
         return view(request, *args, **kwargs)
+    
+class CommentGetView(DetailView):
+    """Comment Get View"""
+
+    model = Twit
+    template_name = "twit_detail.html"
+
+    def get_context_data(self, **kwargs):
+        """Get the context data for the template"""
+        context = super().get_context_data(**kwargs)
+        context["form"] = CommentForm()
+        return context
+
+class CommentPostView(SingleObjectMixin, FormView):
+    """Comment Post View"""
+    model = Twit
+    form_class = CommentForm
+    template_name = "twit_detail.html"
+
+    def post(self, request, *args, **kwargs):
+        # Get the Twit object
+        self.object = self.get_object()
+        # Do work parent would have
+        return super().post(request, *args, **kwargs)
+    
+    def form_valid(self, form):
+        """Create new comment when form is valid"""
+        # Get the comment instance by saving the form with commit to False
+        comment = form.save(commit=False)
+        # Attach the artcle to the new comment.
+        comment.twit = self.object
+        # Attach the user to the new comment
+        comment.author = self.request.user
+        # Save the comment instance to the DB
+        comment.save()
+        return super().form_valid(form)
+    
+    def get_success_url(self):
+        """Get the success url"""
+        twit = self.get_object()
+        return reverse("twit_detail", kwargs={"pk": twit.pk})
 
 
 class TwitUpdateView(LoginRequiredMixin, UpdateView):
@@ -64,47 +105,29 @@ class TwitCreateView(LoginRequiredMixin, CreateView):
     template_name="twit_new.html"
 
 
+class TwitLikeView(LoginRequiredMixin, View):
+    """Twit Like View"""
+    def get(self, request, *args, **kwargs):
+        """GET Request"""
 
-class CommentGetView(DetailView):
-    """Comment Get View"""
+        # Get out the data from the Get request
+        twit_id = request.GET.get("twit_id", None)
+        twit_action = request.GET.get("twit_action", None)
 
-    model = Twit
-    template_name = "twit_detail.html"
+        print(twit_id)
+        print(twit_action)
 
-    def get_context_data(self, **kwargs):
-        """Get the context data for the template"""
-        context = super().get_context_data(**kwargs)
-        context["form"] = CommentForm()
-        return context
-    
+        twit = Twit.objects.get(id=twit_id)
+        if twit_action == "like":
+            # Do like stuff
+            twit.likes.add(request.user)
+        else:
+            # Do unlike stuff
+            twit.likes.remove(request.user)
 
-class CommentPostView(SingleObjectMixin, FormView):
-    """Comment Post View"""
-    model = Twit
-    form_class = CommentForm
-    template_name = "twit_detail.html"
 
-    def post(self, request, *args, **kwargs):
-        # Get the Article object
-        self.object = self.get_object()
-        # Do work parent would have
-        return super().post(request, *args, **kwargs)
-    
-    def form_valid(self, form):
-        """Create new comment when form is valid"""
-        # Get the comment instance by saving the form with commit to False
-        comment = form.save(commit=False)
-        # Attach the artcle to the new comment.
-        comment.twit = self.object
-        # Attach the user to the new comment
-        comment.author = self.request.user
-        # Save the comment instance to the DB
-        comment.save()
-        return super().form_valid(form)
-    
-    def get_success_url(self):
-        """Get the success url"""
-        twit = self.get_object()
-        return reverse("twit_detail", kwargs={"pk": twit.pk})
-
-        
+        return JsonResponse(
+            {
+                "success":True
+            }
+        )
