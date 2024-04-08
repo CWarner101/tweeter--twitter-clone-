@@ -1,3 +1,11 @@
+{% comment %} 
+Name: Connor Warner
+Class: CIS 218 
+Date: 4/8/2024
+{% endcomment %}
+
+
+
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
 
@@ -13,7 +21,7 @@
       <div class='col-sm'>
         <p>
           <a href="" class='me-1'>{{ twit.author }}</a> 
-          {{ twit.created }}
+          Posted: {{ twit.created }}
         </p>
         <p>{{ twit.body }}</p>
         {% if twit.image_url != None %}
@@ -23,7 +31,7 @@
         {% for comment in object.comments.all %}
           <p class='mt-4'>
             <hr class="me-5">
-            <img src="static\images\blank_profile.png" alt="Blank Profile Pic" style="width:25px;height:25px"></img>
+            <img src="\static\images\blank_profile.png" alt="Blank Profile Pic" style="width:25px;height:25px"></img>
               <a href="" class='ms-3 me-1'>{{ comment.author }}</a>
               {{ comment.created }}
             </p>

@@ -1,3 +1,10 @@
+"""
+Name: Connor Warner
+Class: CIS 218 
+Date: 4/8/2024
+"""
+
+
 from django.http import JsonResponse
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views import View
@@ -44,6 +51,7 @@ class CommentGetView(DetailView):
 
 class CommentPostView(SingleObjectMixin, FormView):
     """Comment Post View"""
+
     model = Twit
     form_class = CommentForm
     template_name = "twit_comment.html"
@@ -72,8 +80,8 @@ class CommentPostView(SingleObjectMixin, FormView):
         return reverse("twit_list", kwargs={"pk": twit.pk})
 
 
-class TwitUpdateView(LoginRequiredMixin, UpdateView):
-    """Twit Detail View"""
+class TwitUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    """Twit Update View"""
 
     model = Twit
     fields = 'body','image_url',
@@ -84,12 +92,16 @@ class TwitUpdateView(LoginRequiredMixin, UpdateView):
         return obj.author == self.request.user
 
 
-class TwitDeleteView(LoginRequiredMixin, DeleteView):
-    """Twit Detail View"""
+class TwitDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    """Twit Delete View"""
 
     model = Twit
     template_name = "twit_delete.html"
     success_url = reverse_lazy("twit_list")
+
+    def test_func(self):
+        obj = self.get_object()
+        return obj.author == self.request.user
 
 
 class TwitCreateView(LoginRequiredMixin, CreateView):
@@ -107,6 +119,7 @@ class TwitCreateView(LoginRequiredMixin, CreateView):
 
 class TwitLikeView(LoginRequiredMixin, View):
     """Twit Like View"""
+
     def get(self, request, *args, **kwargs):
         """GET Request"""
 

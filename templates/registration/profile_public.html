@@ -1,3 +1,11 @@
+{% comment %} 
+Name: Connor Warner
+Class: CIS 218 
+Date: 4/8/2024
+{% endcomment %}
+
+
+
 {% extends "base.html" %}
 
 {% block title %}Public Profile{% endblock title %}
@@ -9,7 +17,7 @@
 <p>
     <i class="bi bi-envelope"></i>
     {{ object.email }}
-    <i class="bi bi-calendar-plus"></i>
+    <i class="bi bi-calendar-plus ms-3"></i>
     Joined {{ object.date_joined }}
 </p>
 <p>

@@ -1,3 +1,9 @@
+// Name: Connor Warner
+// Class: CIS 218 
+// Date: 4/8/2024
+
+
+
 $(document).ready(function() {
     $(".like_button").click(function (event) {
         // The work we want to do on click.

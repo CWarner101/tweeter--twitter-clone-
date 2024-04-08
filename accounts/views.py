@@ -1,3 +1,10 @@
+"""
+Name: Connor Warner
+Class: CIS 218 
+Date: 4/8/2024
+"""
+
+
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import CreateView, UpdateView, ListView, DetailView

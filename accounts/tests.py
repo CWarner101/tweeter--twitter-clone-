@@ -1,3 +1,10 @@
+"""
+Name: Connor Warner
+Class: CIS 218 
+Date: 4/8/2024
+"""
+
+
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse

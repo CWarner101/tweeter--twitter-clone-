@@ -1,7 +1,7 @@
 # Assignment 4 - Creating Tweeter (A Twitter Clone)
 
 ## Author
-
+Connor Warner
 
 
 ## Description
@@ -120,8 +120,8 @@ https://getbootstrap.com/docs/4.0/getting-started/introduction/
 | **Extra Credit** Full Heroku Deployment     |   **5**|
 
 ## Outside Resources Used
-
+None
 
 
 ## Known Problems, Issues, And/Or Errors in the Program
-
+None, I hope

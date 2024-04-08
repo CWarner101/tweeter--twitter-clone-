@@ -1,3 +1,10 @@
+"""
+Name: Connor Warner
+Class: CIS 218 
+Date: 4/8/2024
+"""
+
+
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
