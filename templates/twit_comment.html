@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}Add Comment{% endblock title %}
+
+{% block content %}
+    <p>{{ object.author }} | {{ object.created }}</p>
+    <p>{{ object.body }}</p>
+    {% if object.image_url != None %}
+      <img src="{{ object.image_url }}" alt="{{ object.image_url }}" 
+      style="width:500px;height:500px" class='img-thumbnail'></img>
+    {% endif %}
+    {% for comment in object.comments.all %}
+      <p class='mt-4'>
+          <img src="static\images\blank_profile.png" alt="Blank Profile Pic" style="width:25px;height:25px"></img>
+        <a href="" class='ms-3 me-1'>{{ comment.author }}</a>
+        {{ comment.created }}
+      </p>
+      <p class='mx-5'>{{ comment.comment }}</p>
+    {% endfor %}
+    <h4>Add New Comment</h4>
+      <form action="" method ="POST">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <button class="btn btn-success ml-2" type="submit">Save</button>
+      </form>
+    <hr>
+{% endblock content %}

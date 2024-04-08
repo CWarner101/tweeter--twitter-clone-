@@ -17,8 +17,8 @@ class TwitListView(LoginRequiredMixin, ListView):
     template_name="twit_list.html"
 
 
-class TwitDetailView(LoginRequiredMixin, View):
-    """Twit Detail View"""
+class TwitCommentView(LoginRequiredMixin, View):
+    """Twit Comment View"""
 
     def get(self, request, *args, **kwargs):
         """Doing GET request"""
@@ -34,7 +34,7 @@ class CommentGetView(DetailView):
     """Comment Get View"""
 
     model = Twit
-    template_name = "twit_detail.html"
+    template_name = "twit_comment.html"
 
     def get_context_data(self, **kwargs):
         """Get the context data for the template"""
@@ -46,7 +46,7 @@ class CommentPostView(SingleObjectMixin, FormView):
     """Comment Post View"""
     model = Twit
     form_class = CommentForm
-    template_name = "twit_detail.html"
+    template_name = "twit_comment.html"
 
     def post(self, request, *args, **kwargs):
         # Get the Twit object
