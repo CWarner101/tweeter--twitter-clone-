@@ -11,6 +11,7 @@ class Twit(models.Model):
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
+        related_name='twits',
     )
     
     likes = models.ManyToManyField(
@@ -28,7 +29,7 @@ class Twit(models.Model):
     
     def get_absolute_url(self):
         """Absolute URL for twit"""
-        return reverse("twit_detail", kwargs={"pk": self.pk})
+        return reverse("twit_list")
     
     def get_like_url(self):
         """Get like URL based on pk"""
@@ -47,7 +48,7 @@ class Comment(models.Model):
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
-        related_name="comments"
+        related_name="comments",
     )
 
     comment = models.CharField(max_length=140)

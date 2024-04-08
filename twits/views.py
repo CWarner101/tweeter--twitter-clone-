@@ -69,14 +69,14 @@ class CommentPostView(SingleObjectMixin, FormView):
     def get_success_url(self):
         """Get the success url"""
         twit = self.get_object()
-        return reverse("twit_detail", kwargs={"pk": twit.pk})
+        return reverse("twit_list", kwargs={"pk": twit.pk})
 
 
 class TwitUpdateView(LoginRequiredMixin, UpdateView):
     """Twit Detail View"""
 
     model = Twit
-    fields = 'body',
+    fields = 'body','image_url',
     template_name = "twit_edit.html"
 
     def test_func(self):
