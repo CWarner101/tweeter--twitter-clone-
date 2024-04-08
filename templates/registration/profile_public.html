@@ -5,20 +5,20 @@
 {% block content %}
 <h1>Public Profile</h1>
 <img src="/static/images/blank_profile.png" alt="Blank Profile Pic" style="width:150px;height:150px"></img>
-<p class="fs-3 mt-3">{{ user.username }}</p>
+<p class="fs-3 mt-3">{{ object.username }}</p>
 <p>
     <i class="bi bi-envelope"></i>
-    {{ user.email }}
+    {{ object.email }}
     <i class="bi bi-calendar-plus"></i>
-    Joined {{ user.date_joined }}
+    Joined {{ object.date_joined }}
 </p>
 <p>
     <i class="bi bi-twitter"></i>
-    Twits: {{ user.twits.all.count }}
+    Twits: {{ object.twits.all.count }}
 </p>
 <div class='card'>
     <div class="card-body">
-      {% for twit in user.twits.all %}
+      {% for twit in object.twits.all %}
         <div class='row'>
           <div class='col-sm-1'>
             <img src="/static/images/blank_profile.png" alt="Blank Profile Pic" style="width:50px;height:50px"></img>
@@ -65,7 +65,7 @@
               <p class='mt-4'>
                 <hr class="me-5">
                 <img src="\static\images\blank_profile.png" alt="Blank Profile Pic" style="width:25px;height:25px"></img>
-                  <a href="{% url "profile_public" twit.author.pk %}" class='ms-3 me-1'>{{ comment.author }}</a>
+                  <a href="{% url "profile_public" comment.author.pk %}" class='ms-3 me-1'>{{ comment.author }}</a>
                   {{ comment.created }}
                 </p>
                 <p class='mx-5'>{{ comment.comment }}</p>

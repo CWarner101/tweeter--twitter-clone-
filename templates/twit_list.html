@@ -19,7 +19,7 @@
         </div>
         <div class='col-sm'>
           <p>
-            <a href="{% url "profile_public" user.pk %}" class='me-1'>{{ twit.author }}</a> 
+            <a href="{% url "profile_public" twit.author_id %}" class='me-1'>{{ twit.author }}</a> 
             {{ twit.created }}
             {% if twit.author == user %}
               <a href="{% url "twit_edit" twit.pk %}" class='btn btn-success btn-sm ms-3 me-1'>
@@ -59,7 +59,7 @@
             <p class='mt-4'>
               <hr class="me-5">
               <img src="static\images\blank_profile.png" alt="Blank Profile Pic" style="width:25px;height:25px"></img>
-                <a href="{% url "profile_public" twit.author.pk %}" class='ms-3 me-1'>{{ comment.author }}</a>
+                <a href="{% url "profile_public" comment.author_id %}" class='ms-3 me-1'>{{ comment.author }}</a>
                 {{ comment.created }}
               </p>
               <p class='mx-5'>{{ comment.comment }}</p>
