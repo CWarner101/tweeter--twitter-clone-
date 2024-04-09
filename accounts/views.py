@@ -6,12 +6,11 @@ Date: 4/8/2024
 
 
 from django.urls import reverse_lazy
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import CreateView, UpdateView, ListView, DetailView
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.views.generic import CreateView, UpdateView, DetailView
 
 from .forms import CustomUserCreationForm
 from .models import CustomUser
-from twits.models import Twit
 
 class SignUpView(CreateView):
     """Sign Up View"""
@@ -20,7 +19,7 @@ class SignUpView(CreateView):
     success_url = reverse_lazy("login")
     template_name = "registration/signup.html"
 
-class ProfileUpdateView(LoginRequiredMixin, UpdateView):
+class ProfileUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     """Profile Update View"""
 
     model = CustomUser
@@ -36,7 +35,7 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
 
     def test_func(self):
         obj = self.get_object()
-        return obj.user == self.request.user
+        return obj.pk == self.request.user.pk
     
 
 class ProfilePublicView(LoginRequiredMixin, DetailView):

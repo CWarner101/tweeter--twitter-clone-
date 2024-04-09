@@ -5,7 +5,7 @@ CIS 218
 """
 
 from django.contrib.auth import get_user_model
-from django.test import TestCase
+from django.test import TestCase, Client
 from django.urls import reverse
 from .models import Twit, Comment
 
@@ -14,20 +14,24 @@ class TwitsTests(TestCase):
     
     @classmethod
     def setUpTestData(cls):
-        cls.author = get_user_model().objects.create_user(
+        cls.user = get_user_model().objects.create_user(
             username="testuser", password="secret"
         )
         cls.twit = Twit.objects.create(
             body="Test Twit",
-            author=cls.author,
+            author=cls.user,
             image_url="image.png",
         )
 
         cls.comment = Comment.objects.create(
             twit= cls.twit,
-            author = cls.author,
+            author = cls.user,
             comment = "Test comment",
         )
+
+        cls.client = Client()
+        cls.client.force_login(cls.user)
+
 
     # Twit Tests
     def test_twit_model(self):
@@ -37,85 +41,119 @@ class TwitsTests(TestCase):
         self.assertEqual(self.twit.author.username, "testuser")
         self.assertEqual(self.twit.image_url, "image.png")
 
-    def test_twit_url_exists_at_correct_location_listview(self):
+
+    def test_url_exists_at_correct_location_listview(self):
         """Test url exists at correct location list view"""
-        response = self.client.get("")
-        self.assertEqual(response.status_code, 302)
+        self.client.force_login(self.user)
+        response = self.client.get("/")
+        self.assertEqual(response.status_code, 200)
 
     def test_twit_listview(self):
         """Test twit list view"""
+        self.client.force_login(self.user)
         response = self.client.get(reverse("twit_list"))
+        self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Test Twit")
         self.assertTemplateUsed(response, "twit_list.html")
 
-    # def test_twit_detailview(self):
-    #     """Test twit detail view"""
-    #     response = self.client.get(reverse("twit_detail", kwargs={"pk": self.twit.pk}))
-    #     no_response = self.client.get("/twit/100000/")
-    #     self.assertEqual(response.status_code, 200)
-    #     self.assertEqual(no_response.status_code, 404)
-    #     self.assertContains(response, "Test twit")
-    #     self.assertTemplateUsed(response, "twit_detail.html")
+    
+    def test_url_exists_at_correct_location_updateview(self):
+        """Test url exists at correct location update view"""
+        self.client.force_login(self.user)
+        response = self.client.get("/1/edit/")
+        self.assertEqual(response.status_code, 200 )
+
+    def test_twit_updateview(self):
+        """Test review create view"""
+        self.client.force_login(self.user)
+        response = self.client.get(reverse("twit_edit", kwargs={"pk": self.twit.pk}))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Twit - Edit")
+        self.assertTemplateUsed(response, "twit_edit.html")
 
     
-    # # Comment Tests
-    # def test_review_model(self):
-    #     """Test the review model"""
-    #     self.assertEqual(self.review.twit.name, "Test Restaurant")
-    #     self.assertEqual(str(self.review), "Test review")
-    #     self.assertEqual(self.review.rating, 3)
-    #     self.assertEqual(self.review.get_absolute_url(), "/review/1/")
+    def test_twit_url_exists_at_correct_location_deleteview(self):
+        """Test url exists at correct location delete view"""
+        self.client.force_login(self.user)
+        response = self.client.get("/1/delete/")
+        self.assertEqual(response.status_code, 200 )
+
+    def test_twit_deleteview(self):
+        """Test twit delete view"""
+        self.client.force_login(self.user)
+        response = self.client.get(reverse("twit_delete", kwargs={"pk": self.twit.pk}))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Are you sure you want to delete the following Twit?")
+        self.assertTemplateUsed(response, "twit_delete.html")
 
 
-    # def test_review_url_exists_at_correct_location_detailview(self):
-    #     """Test url exists at correct location detail view"""
-    #     response = self.client.get("/review/1/")
-    #     self.assertEqual(response.status_code, 200 )
-        
-    # def test_review_detailview(self):
-    #     """Test review detail view"""
-    #     response = self.client.get(reverse("review_detail", kwargs={"pk": self.restaurant.pk}))
-    #     no_response = self.client.get("/review/100000/")
-    #     self.assertEqual(response.status_code, 200)
-    #     self.assertEqual(no_response.status_code, 404)
-    #     self.assertContains(response, "Test review")
-    #     self.assertTemplateUsed(response, "review_detail.html")
+    def test_url_exists_at_correct_location_createview(self):
+        """Test url exists at correct location create view"""
+        self.client.force_login(self.user)
+        response = self.client.get("/new/")
+        self.assertEqual(response.status_code, 200 )
 
-
-    # def test_review_url_exists_at_correct_location_createview(self):
-    #     """Test url exists at correct location create view"""
-    #     response = self.client.get("/review/create/")
-    #     self.assertEqual(response.status_code, 200 )
-
-    # def test_review_createview(self):
-    #     """Test review create view"""
-    #     response = self.client.get(reverse("review_create"))
-    #     self.assertEqual(response.status_code, 200)
-    #     self.assertContains(response, "Write a Review")
-    #     self.assertTemplateUsed(response, "review_create.html")
-
-
-    # def test_review_url_exists_at_correct_location_updateview(self):
-    #     """Test url exists at correct location update view"""
-    #     response = self.client.get("/review/1/update/")
-    #     self.assertEqual(response.status_code, 200 )
-
-    # def test_review_createview(self):
-    #     """Test review create view"""
-    #     response = self.client.get(reverse("review_update", kwargs={"pk": self.review.pk}))
-    #     self.assertEqual(response.status_code, 200)
-    #     self.assertContains(response, "Test Restaurant - Edit Review")
-    #     self.assertTemplateUsed(response, "review_update.html")
+    def test_twit_createview(self):
+        """Test twit create view"""
+        self.client.force_login(self.user)
+        response = self.client.get(reverse("twit_new"))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "New")
+        self.assertTemplateUsed(response, "twit_new.html")
 
     
-    # def test_review_url_exists_at_correct_location_deleteview(self):
-    #     """Test url exists at correct location delete view"""
-    #     response = self.client.get("/review/1/delete/")
-    #     self.assertEqual(response.status_code, 200 )
 
-    # def test_review_deleteview(self):
-    #     """Test review delete view"""
-    #     response = self.client.get(reverse("review_delete", kwargs={"pk": self.review.pk}))
-    #     self.assertEqual(response.status_code, 200)
-    #     self.assertContains(response, "Are you sure you want to delete this review?")
-    #     self.assertTemplateUsed(response, "review_delete.html")
+    # Comment Tests
+    def test_comment_model(self):
+        """Test Comment Model"""
+        self.client.force_login(self.user)
+        self.assertEqual(self.comment.comment, "Test comment")
+        self.assertEqual(str(self.comment), "Test comment")
+        self.assertEqual(self.comment.author.username, "testuser")
+
+    
+    def test_url_exists_at_correct_location_twit_comment_view(self):
+        """Test url exists at correct location comment view"""
+        self.client.force_login(self.user)
+        response = self.client.get("/1/")
+        self.assertEqual(response.status_code, 200 )
+
+    def test_comment_twit_comment_view(self):
+        """Test twit comment view"""
+        self.client.force_login(self.user)
+        response = self.client.get(reverse("twit_comment", kwargs={"pk": self.twit.pk}))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Add New Comment")
+        self.assertTemplateUsed(response, "twit_comment.html")
+
+
+
+    # Profile Tests
+    def test_twit_url_exists_at_correct_location_profile_public_view(self):
+        """Test url exists at correct location delete view"""
+        self.client.force_login(self.user)
+        response = self.client.get("/accounts/profile_public/1/")
+        self.assertEqual(response.status_code, 200 )
+
+    def test_profile_public_view(self):
+        """Test Profile Public View"""
+        self.client.force_login(self.user)
+        response = self.client.get(reverse("profile_update", kwargs={"pk": 1}))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Update Profile")
+        self.assertTemplateUsed(response, "registration/profile_update.html")
+
+
+    def test_twit_url_exists_at_correct_location_profile_update_view(self):
+        """Test url exists at correct location delete view"""
+        self.client.force_login(self.user)
+        response = self.client.get("/accounts/profile/1/")
+        self.assertEqual(response.status_code, 200 )
+
+    def test_profile_update_view(self):
+        """Test Profile Update View"""
+        self.client.force_login(self.user)
+        response = self.client.get(reverse("profile_public", kwargs={"pk": 1}))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Public Profile")
+        self.assertTemplateUsed(response, "registration/profile_public.html")
