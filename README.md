@@ -12,6 +12,8 @@ pictures via a URL to a picture. Users can also like and unlike Twits that
 other users make. In short, there will be a lot of similarity with what we did
 with in-class-4.
 
+This project makes use of a custom user model using Djangos AbstractUser model class.
+
 The site makes use of bootstrap to better stylize it.
 
 Tests for the site views check that the view exists at the correct url with the correct content. 
